@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using rare_crew_c__test.DTO;
 using rare_crew_c__test.Models;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace rare_crew_c__test.ApiService
 {
@@ -68,5 +70,34 @@ namespace rare_crew_c__test.ApiService
                                               .ToList();
             return employeesWorkingHours;
         }
+        public void CreatePieChart(List<EmployeeDTO> employees)
+        {
+            var totalHours = employees.Sum(x => x.Total_Hours);
+            var pieChartValues = employees.Select(x => new
+            {
+                x.Name,
+                Percentage = (double)x.Total_Hours / totalHours * 100
+            }).ToList();
+            int width = 800;
+            int height = 600;
+            Bitmap bitmap = new Bitmap(width, height);
+            Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.Clear(Color.FromArgb(240, 240, 240));
+            var colors = new[] { "#FF6F61", "#6B5B95 ", "#88B04B ", "#313242", "#92A8D1 ", "#6D7034", "#D06A5E", "#0F2D31", "#726000", "#32CD32" };
+            var random = new Random();
+            float startAngle = 0f;
+            int colorIndex = 0;
+            foreach (var p in pieChartValues)
+            {
+                float sweepAngle = (float)(p.Percentage * 360 / 100);
+                var color = ColorTranslator.FromHtml(colors[colorIndex % colors.Length]);
+                graphics.FillPie(new SolidBrush(color), new Rectangle(180, 50, 500, 500), startAngle, sweepAngle);
+                graphics.DrawString($"{p.Name}: {p.Percentage:F2}%", new Font("Arial", 12), new SolidBrush(color), new PointF(20, 20 + (colorIndex * 20)));
+                startAngle += sweepAngle;
+                colorIndex++;
+            }
+            bitmap.Save("wwwroot/img/PieChart.png", ImageFormat.Png);
+        }
+
     }
 }

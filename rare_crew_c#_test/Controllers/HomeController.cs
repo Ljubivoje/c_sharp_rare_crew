@@ -26,6 +26,7 @@ namespace rare_crew_c__test.Controllers
                 ViewBag.Message = "No employees.";
             }
             List<EmployeeDTO> workingHours = await _service.GetEmployeesWithWorkingHours(employees);
+            _service.CreatePieChart(workingHours);
             return View(workingHours);
         }
 
