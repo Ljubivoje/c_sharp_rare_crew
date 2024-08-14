@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\rare_crew_c#_test.props" />
+</Project>

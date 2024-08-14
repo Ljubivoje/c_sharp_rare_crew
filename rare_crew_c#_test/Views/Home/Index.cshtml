@@ -1,0 +1,35 @@
+﻿@using rare_crew_c__test.DTO
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model List<EmployeeDTO>
+
+@if (Model != null && Model.Count > 0)
+{
+    <h2>Employee table</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Total time in month</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model)
+            {
+                <tr style="@(employee.Total_Hours<100 ? "background-color: #FFCCCB;" : "")">
+                    <td>@employee.Name</td>
+                    <td>@employee.Total_Hours</td>
+                    <td><a href="#">Edit</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>@ViewBag.Message</p>
+}
